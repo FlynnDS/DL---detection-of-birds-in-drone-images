@@ -11,7 +11,8 @@ Packages
 
 ## Second stage
 - Optimizing the baseline
-
+- Experimentation of the different suggested models
+- 
 
 
 
