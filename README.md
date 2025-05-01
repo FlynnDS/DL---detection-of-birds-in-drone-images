@@ -1,7 +1,6 @@
 "# DL---detection-of-birds-in-drone-images" 
 
-First google docs:
-https://docs.google.com/document/d/1QWCp2iG_x63vVL_n_U85DJltjmvRM5bZksUQe_IJr7w/edit?tab=t.0#heading=h.wo2qsd1lxmxp
+[Google Drive](https://drive.google.com/drive/u/0/folders/1s-2uJSHty12oKUNlqSL-MHXkW62AAV0E)
 
 Packages
 
