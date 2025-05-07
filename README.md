@@ -80,3 +80,10 @@ Cas
 What type of drone is it?
 
 What is the computing power of the drone? So how much can we use for computing for inference?
+
+What is the reason behind using different image sizes and types in the dataset? How can we fix this issues, especially for the tiling scenario & sizing. 
+
+We noticed that the data includes fake birds that are added on top of the dataset. Is this for all birds or are there also real birds?
+
+How can we fix the issue behind overlapping tiles. If there are predictions of the same bird that is in the overlapping segement of the tiles. 
+
