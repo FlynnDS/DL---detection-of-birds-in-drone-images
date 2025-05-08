@@ -128,7 +128,7 @@ class AllImages(BaseModel):
         # Sometimes the cropped image is in the wrong format. So we recursively call this function to retry another one
         for i in range(5):
             cropped_image = image.get_cropped_images(new_width)
-            if cropped_image != False:
+            if cropped_image:
                 return cropped_image
         
     def get_list_of_paths_crows_pigeons(self):
