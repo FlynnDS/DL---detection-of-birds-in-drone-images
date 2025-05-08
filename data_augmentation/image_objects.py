@@ -126,7 +126,7 @@ class AllImages(BaseModel):
         print(image.cleaned_file)
 
         # Sometimes the cropped image is in the wrong format. So we recursively call this function to retry another one
-        for i in range(5):
+        for i in range(10):
             cropped_image = image.get_cropped_images(new_width)
             if cropped_image:
                 return cropped_image

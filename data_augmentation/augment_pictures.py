@@ -22,9 +22,13 @@ def get_average_bounding_box(label_path: str):
         
     bounding_boxes = [bounding_box.strip().split(" ") for bounding_box in bounding_boxes]
     #bird_class, x_center_rel, y_center_rel, width_rel, height_rel = map(float, largest_bounding_box.split(" "))
-    average_rel_width = sum([float(bounding_box[3]) for bounding_box in bounding_boxes])/len(bounding_boxes)
-    average_rel_height = sum([float(bounding_box[4]) for bounding_box in bounding_boxes])/len(bounding_boxes)
-
+    
+    try:
+        average_rel_width = sum([float(bounding_box[3]) for bounding_box in bounding_boxes])/len(bounding_boxes)
+        average_rel_height = sum([float(bounding_box[4]) for bounding_box in bounding_boxes])/len(bounding_boxes)
+    except ZeroDivisionError:
+        average_rel_width = 0
+        average_rel_height = 0
     return (average_rel_width, average_rel_height)
 
 
