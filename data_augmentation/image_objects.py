@@ -5,6 +5,7 @@ import random
 import shutil
 from IPython.display import Image, display
 from PIL import Image as PILImage
+import numpy as np
 
 class ImageData(BaseModel):
     image_name: str
@@ -41,28 +42,47 @@ class ImageData(BaseModel):
         bounding_boxes = self.label_text.split("\n")
         # You only want to take one of the bounding boxes to display because we only want to add one picture into another picture
         # So we take the largest one, which has the highest probability to be one that is the most complete bird
-        largest_bounding_box = sorted(bounding_boxes, reverse=True, key= lambda x: x[3])[0]
-        if len(largest_bounding_box.split(" ")) != 5:
-            return False
-        bird_class, x_center_rel, y_center_rel, width_rel, height_rel = map(float, largest_bounding_box.split(" "))
-        x_center = x_center_rel * img_width
-        y_center = y_center_rel * img_height
-        width = width_rel * img_width
-        height = height_rel * img_height
+        sorted_bounding_boxes = sorted(bounding_boxes, reverse=True, key= lambda x: x[3])
+        for largest_bounding_box in sorted_bounding_boxes:
+            # when the data is in incorrect format
+            if len(largest_bounding_box.split(" ")) != 5:
+                return False
+            bird_class, x_center_rel, y_center_rel, width_rel, height_rel = map(float, largest_bounding_box.split(" "))
+            x_center = x_center_rel * img_width
+            y_center = y_center_rel * img_height
+            width = width_rel * img_width
+            height = height_rel * img_height
 
-        x_short = x_center - (0.5 * width)
-        x_long = x_center + (0.5 * width)
-        y_short = y_center - (0.5 * height)
-        y_long = y_center + (0.5 * height)
-        cropped_img = img.crop((x_short, y_short, x_long, y_long))
+            x_short = x_center - (0.5 * width)
+            x_long = x_center + (0.5 * width)
+            y_short = y_center - (0.5 * height)
+            y_long = y_center + (0.5 * height)
+            cropped_img = img.crop((x_short, y_short, x_long, y_long))
 
-        # now we are scaling the cropped image to the correct size
-        wpercent = (new_width / float(img_width))
-        hsize = int((float(img_height) * wpercent))
-        img_resized = cropped_img.resize((new_width, hsize), PILImage.Resampling.LANCZOS)
-        display(img_resized)
+            # now we are scaling the cropped image to the correct size
+            wpercent = (new_width / float(img_width))
+            hsize = int((float(img_height) * wpercent))
+            img_resized = cropped_img.resize((new_width, hsize), PILImage.Resampling.LANCZOS)
+            if cropped_img.mode != "RGBA":
+                print("image is in mode: ", cropped_img.mode, "converting to RGBA")
+                cropped_img = cropped_img.convert("RGBA")
+            # Extract alpha channel (opacity)
+            alpha = img_resized.getchannel("A")
 
-        return img_resized
+            # Convert to numpy array for efficient computation
+            alpha_np = np.array(alpha, dtype=np.float32) / 255.0  # Normalize to [0,1]
+
+            # Calculate average opacity
+            avg_opacity = np.mean(alpha_np)
+
+            # Skip image if average opacity is less than 0.05
+            if avg_opacity < 0.05:
+                print("the opacity is too little for the largest bounding box")
+                continue
+            display(img_resized)
+
+            return img_resized
+        return False
 
 class AllImages(BaseModel):
     images_dict: Dict[str, ImageData] = dict()
@@ -79,7 +99,6 @@ class AllImages(BaseModel):
                             for index, (image_name, image)
                             in enumerate(self.images_dict.items())
                             if image.bird_class in bird_classes}
-        print(len(found_image_dict))
         return found_image_dict
 
     def get_random_instance(self, bird_classes: Tuple[int] = (0, 1, 2, 3, 4), cleaned_file=False):
@@ -110,7 +129,7 @@ class AllImages(BaseModel):
         for i in range(5):
             cropped_image = image.get_cropped_images(new_width)
             if cropped_image != False:
-                break
+                return cropped_image
         
     def get_list_of_paths_crows_pigeons(self):
         """returns all of the information of the files as a list of lists. 
@@ -168,3 +187,24 @@ class AllImages(BaseModel):
                 continue
             first_file_name = file.split(".")[0]
             self.images_dict[first_file_name].cleaned_file = f"{path}/crows/{file}"
+
+    def get_files_in_data_folder(self, path: str):
+        images_paths = [f"{path}/images/{file_path}" for file_path in os.listdir(f"{path}/images")]
+        label_file_names = [file_path for file_path in os.listdir(f"{path}/labels")]
+
+        for label_file in label_file_names:
+            if ".DS_Store" in label_file:
+                continue
+            # the same picture has the first part the same but might have had different augmentation
+            first_file_name = label_file.split(".")[0]
+            if first_file_name in self.images_dict:
+                image = self.images_dict[first_file_name]
+            else:
+                with open(f"{path}/labels/{label_file}") as f:
+                    label_text = f.read()
+                image = ImageData(image_name=first_file_name,
+                                  label_text=label_text)
+            label_file_no_ext = os.path.splitext(label_file)[0]
+            found_image = [file_name for file_name in images_paths if label_file_no_ext in file_name][0]
+            image.image_paths.append(found_image)
+            self.images_dict[first_file_name] = image
