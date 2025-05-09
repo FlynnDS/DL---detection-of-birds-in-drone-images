@@ -79,7 +79,6 @@ class ImageData(BaseModel):
             if avg_opacity < 0.05:
                 print("the opacity is too little for the largest bounding box")
                 continue
-            display(img_resized)
 
             return img_resized
         return False
@@ -122,8 +121,6 @@ class AllImages(BaseModel):
 
     def get_random_cropped_images(self, new_width):
         image = self.get_random_instance((0, 3), True)
-        print(image.image_name)
-        print(image.cleaned_file)
 
         # Sometimes the cropped image is in the wrong format. So we recursively call this function to retry another one
         for i in range(10):

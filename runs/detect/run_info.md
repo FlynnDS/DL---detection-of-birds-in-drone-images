@@ -12,3 +12,21 @@
 - train8 -> The model runned with gamma correction and tiling of 1280x1280 with 2 added birds in each tile
   - train82 -> The validation run of train8
   ![Alt text](train82/confusion_matrix_normalized.png)
+
+- train9 -> The model runned with gamma correction and tiling of 1280x1280 with 2 added birds in each tile
+    - With paramters:
+        # Hyperparameters
+    epochs=100,                    # Number of epochs
+    batch=16,                     # batch size
+    imgsz=1280,                    # Image size
+    single_cls=True,
+    weight_decay=0.0003,
+    warmup_epochs=5.0,
+    warmup_momentum=0.75,
+    freeze=10,                     # Freeze first 10 layers
+    patience=12,
+    dropout=0.1,
+    # Reproducability
+    seed = 42
+  - train92 -> The validation run of train9
+  ![Alt text](train92/confusion_matrix_normalized.png)

@@ -44,12 +44,10 @@ def add_picture_to_picture(image_path: str, label_path: str, average_rel_width, 
     width_pixels = int(w*average_rel_width)
         
     cropped_pil = all_images_objects.get_random_cropped_images(width_pixels)
-    print(type(cropped_pil))
     
     # Convert PIL to OpenCV format
     cropped_np = np.array(cropped_pil)
     cropped_cv = cv2.cvtColor(cropped_np, cv2.COLOR_RGBA2BGRA)  # Preserve alpha channel
-    print(random.randint(3+int(width_pixels*0.5), w-3-int(width_pixels*0.5)))
     # Choose a position to paste. At least 3 pixels from the border and half of the picture size to be added
     x_offset = random.randint(
         int(3 + width_pixels * 0.5),
