@@ -30,3 +30,7 @@
     seed = 42
   - train92 -> The validation run of train9
   ![Alt text](train92/confusion_matrix_normalized.png)
+
+- train10 -> The model run with gamma correction and tiling 640x640 with 2 added birds in each tile
+  - train102 -> Validation run of train10
+  ![Alt text](train102/confusion_matrix_normalized.png)
