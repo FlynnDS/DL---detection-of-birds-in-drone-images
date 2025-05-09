@@ -120,13 +120,17 @@ class AllImages(BaseModel):
         image.get_cleaned_scaled_image(new_width, new_height)
 
     def get_random_cropped_images(self, new_width):
-        image = self.get_random_instance((0, 3), True)
-
+        
         # Sometimes the cropped image is in the wrong format. So we recursively call this function to retry another one
         for i in range(10):
+            image = self.get_random_instance((0, 3), True)
             cropped_image = image.get_cropped_images(new_width)
             if cropped_image:
+                print("found image= ", image.image_name)
                 return cropped_image
+            
+        print("No valid cropped image found after 10 attempts.")
+        return None
         
     def get_list_of_paths_crows_pigeons(self):
         """returns all of the information of the files as a list of lists. 
