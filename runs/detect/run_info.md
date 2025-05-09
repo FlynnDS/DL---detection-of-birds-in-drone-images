@@ -40,7 +40,9 @@
   
 
 
-- train13 -> The model run with gamma correction and tiling 640x640 with 2 added birds in each tile (Now the birds are correct)
+- train13 -> The model run with gamma correction and tiling 640x640 without any birds added 
   - The train13 stopped halfway. So I rerun it and this becomes train14.
 - train14 -> weights of train13 are used here
 ![Alt text](train142/confusion_matrix_normalized.png)
+
+- train15 -> The model run with gamma correction and tiling 640x640 with 2 added birds in each tile (Now the birds are correct)
