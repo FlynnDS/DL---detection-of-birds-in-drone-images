@@ -17,6 +17,13 @@
   - train82 -> The validation run of train8
   ![Alt text](train82/confusion_matrix_normalized.png)
 
+- val2 -> 0,78 recall rate. With model on inference mode with 66% precision
+
+- val5 -> 0,89 recall rate. But 3000 birds detected when there was no bird
+- ![image](https://github.com/user-attachments/assets/90534dc8-66c5-4d44-8904-ff9a2c94da90)
+
+
+
 - train9 -> The model runned with gamma correction and tiling of 1280x1280 with 2 added birds in each tile
     - With paramters:
         # Hyperparameters
