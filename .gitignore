@@ -7,5 +7,4 @@ __pycache__/
 run_13_lr0.01_mos0.0_sc0.3/weights/best.pt
 grid_search_yolo/run_13_lr0.01_mos0.0_sc0.3/weights/last.pt
 grid_search_yolo/run_8_lr0.005_mos0.0_sc0.5/weights/best.pt
-**/best.pt
-**/last.pt
+**/*.pt
