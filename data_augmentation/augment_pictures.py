@@ -29,7 +29,7 @@ def get_average_bounding_box(label_path: str):
     except ZeroDivisionError:
         average_rel_width = 0
         average_rel_height = 0
-    return (average_rel_width, average_rel_height)
+    return average_rel_width, average_rel_height
 
 
 def add_picture_to_picture(image_path: str, label_path: str, average_rel_width, average_rel_height):
